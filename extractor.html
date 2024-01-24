@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parse CSV</title>
+</head>
+<body>
+
+    <input type="file" id="fileInput">
+    <script>
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+
+        function handleFileSelect(event) {
+            const reader = new FileReader();
+            reader.onload = handleFileLoad;
+            reader.readAsText(event.target.files[0]);
+        }
+
+        function handleFileLoad(event) {
+            const csv = event.target.result;
+            const lines = csv.trim().split('\n');
+            const result = lines.slice(1).map((line) => { // Assume la prima riga sia di intestazione
+                const columns = line.split(',');
+                return {
+                    low: parseFloat(columns[4]),   // Colonna Low
+                    close: parseFloat(columns[5]), // Colonna Close
+                    open: parseFloat(columns[2]),  // Colonna Open
+                    high: parseFloat(columns[3])   // Colonna High
+                };
+            });
+
+            // Qui puoi fare qualcosa con il risultato, come ad esempio stamparlo in console
+            console.log(result);
+
+            // Salvare un dato su localStorage
+            localStorage.setItem('BackTestData', JSON.stringify(result));
+
+        }
+
+        
+    </script>
+
+</body>
+</html>
